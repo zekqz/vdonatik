@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>v-donatik — пополнение Steam с комиссией 2%</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+/* ===== SMOOTH SCROLL ===== */
+html{
+  scroll-behavior:smooth;
+}
+
+/* ===== BASE ===== */
+body{
+  background:#05070f;
+  color:white;
+  overflow-x:hidden;
+  font-family:Arial, sans-serif;
+}
+
+/* ===== BACKGROUND ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+}
+
+.blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(140px);
+  opacity:0.55;
+}
+
+.blob1{
+  width:800px;
+  height:800px;
+  background:radial-gradient(circle at center, rgba(0,200,255,0.9), transparent 60%);
+  top:-200px;
+  left:-200px;
+}
+
+.blob2{
+  width:900px;
+  height:900px;
+  background:radial-gradient(circle at center, rgba(59,130,246,0.8), transparent 65%);
+  top:150px;
+  right:-350px;
+}
+
+.blob3{
+  width:700px;
+  height:700px;
+  background:radial-gradient(circle at center, rgba(14,165,233,0.7), transparent 60%);
+  bottom:-250px;
+  left:30%;
+}
+
+.noise{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:url("https://www.transparenttextures.com/patterns/noise.png");
+  opacity:0.04;
+}
+
+/* ===== HEADER ===== */
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:50;
+  padding:20px;
+  backdrop-filter:blur(20px);
+}
+
+/* ===== GLASS ===== */
+.glass{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:.3s;
+}
+
+.glass:hover{
+  border-color:rgba(6,182,212,0.3);
+}
+
+/* ===== BUTTON ===== */
+.glow{
+  box-shadow:0 0 40px rgba(6,182,212,0.25);
+  transition:.3s;
+}
+
+.glow:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 60px rgba(6,182,212,0.45);
+}
+
+/* ===== SHAKE ===== */
+.shake{
+  animation:shake .4s ease;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-6px);}
+  50%{transform:translateX(6px);}
+  75%{transform:translateX(-4px);}
+}
+
+/* ===== FAQ ===== */
+details{
+  cursor:pointer;
+}
+
+summary{
+  list-style:none;
+}
+
+summary::-webkit-details-marker{
+  display:none;
+}
+
+/* ===== SELECT ===== */
+select{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+
+  <div class="max-w-6xl mx-auto glass rounded-2xl px-6 py-4 flex items-center justify-between">
+
+    <!-- LOGO -->
+    <div class="text-2xl font-black tracking-tight">
+      <span class="text-white">v</span><span class="text-cyan-400">-donatik</span>
+    </div>
+
+    <!-- NAV -->
+    <nav class="flex items-center gap-6 text-white/70 font-medium">
+
+      <a href="#topup"
+      class="hover:text-cyan-400 transition duration-300">
+        Пополнить Steam
+      </a>
+
+      <a href="#faq"
+      class="hover:text-cyan-400 transition duration-300">
+        FAQ
+      </a>
+
+    </nav>
+
+  </div>
+
+</header>
+
+<!-- BACKGROUND -->
+<div class="bg">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<div class="noise"></div>
+
+<!-- HERO -->
+<section id="topup" class="relative pt-40 pb-24 text-center">
+
+<h1 class="text-7xl font-black leading-tight">
+  <span class="text-white">v</span><span class="text-cyan-400">-donatik</span>
+</h1>
+
+<p class="text-2xl text-white/70 mt-6">
+  Быстрое и безопасное пополнение Steam
+</p>
+
+<div class="mt-6 inline-flex items-center gap-2 glass px-5 py-3 rounded-2xl text-cyan-300">
+  УСПЕЙ ПОПОЛНИТЬ! комиссия всего <b>2%</b> может закончиться в любой момент 🔥
+</div>
+
+</section>
+
+<!-- FORM -->
+<section id="form" class="max-w-5xl mx-auto px-6 space-y-6">
+
+<!-- AMOUNT -->
+<div class="glass p-7 rounded-3xl">
+
+<div class="text-white/60 mb-2">
+Сумма пополнения
+</div>
+
+<div class="flex gap-3">
+
+<input id="amount"
+type="number"
+class="w-full p-5 rounded-2xl bg-black/40 border border-white/10 outline-none"
+placeholder="Введите сумму"
+oninput="update()"/>
+
+<select id="region"
+class="bg-black/40 border border-white/10 rounded-2xl px-5 outline-none text-2xl"
+onchange="updateRegion()">
+
+<option value="RUB">🇷🇺</option>
+<option value="KZT">🇰🇿</option>
+<option value="USD">🇺🇸</option>
+<option value="EUR">🇪🇺</option>
+<option value="UAH">🇺🇦</option>
+
+</select>
+
+</div>
+
+<div id="limitText"
+class="text-white/40 text-sm mt-2">
+</div>
+
+</div>
+
+<!-- LOGIN -->
+<div class="glass p-7 rounded-3xl">
+
+<div class="text-white/60 mb-2">
+Steam логин
+</div>
+
+<input id="login"
+class="w-full p-5 rounded-2xl bg-black/40 border border-white/10 outline-none"
+placeholder="Введите логин"
+oninput="checkLogin()"/>
+
+<div id="status"
+class="text-sm mt-2 text-cyan-400/70">
+</div>
+
+</div>
+
+<!-- RESULT -->
+<div class="glass p-7 rounded-3xl">
+
+<div class="text-white/50">
+К оплате
+</div>
+
+<div id="result"
+class="text-4xl font-black text-cyan-400 flex items-center gap-3">
+
+<span id="resultFlag">🇷🇺</span>
+<span id="resultValue">0</span>
+
+</div>
+
+</div>
+
+<!-- PAY -->
+<button onclick="pay()"
+class="w-full py-5 rounded-3xl bg-cyan-500 text-black font-black glow">
+
+Перейти к оплате
+
+</button>
+
+</section>
+
+<!-- FAQ -->
+<section id="faq"
+class="max-w-5xl mx-auto px-6 mt-20 mb-24">
+
+<h2 class="text-4xl font-black text-center mb-10">
+FAQ
+</h2>
+
+<div class="space-y-4">
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Как быстро приходит пополнение?
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Обычно от 1 до 5 минут после оплаты, но иногда из-за нагрузки пополнение может доходить до двух часов.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Есть ли комиссия?
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Да, комиссия составляет всего 2%.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Нужно ли вводить пароль Steam?
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Нет, нужен только логин аккаунта.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Гайд при первом пополнении нового аккаунта Steam.
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Если вы пополняете аккаунт на котором до этого не было финансовых операций, его регион может измениться на Казахстан, Узбекистан или другой похожий регион, а валюта на CIS $ (или другие).
+
+Чтобы этого избежать и сделать тот регион (страну) которую вы хотите, первое пополение должно быть из той страны или региона которое вы хотите себе, если вы хотите оставить Россию, пополняйте на Steam кошелёк рубли, если хотите регион Казахстан пополняйте на Steam кошелёк теньге, так же и с другими.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Не приходят деньги на баланс аккаунта Steam
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Если Вы указали верно ЛОГИН (это не никнейм) и баланс Вашего аккаунта - рубли (₽), пополнение происходит моментально.
+Если Вам не поступили средства на баланс в течении 10 минут, пожалуйста обратитесь в Техническую поддержку.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Что такое "Логин"?
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Логин — это то что вы вводите при авторизации, у каждого пользователя он уникальный, а никнейм вы можете менять по своему усмотрению. Людей с ником QWERTY, может быть сотни. Не перепутайте ваш логин и никнейм.
+</p>
+
+</details>
+
+</div>
+
+<div class="glass p-5 rounded-2xl">
+
+<details class="group">
+
+<summary class="flex items-center justify-between cursor-pointer text-cyan-300 font-semibold list-none">
+
+Это безопасно?
+
+<span class="transition-transform duration-300 group-open:rotate-180 text-cyan-300">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-5 h-5"
+fill="none"
+viewBox="0 0 24 24"
+stroke="currentColor">
+
+<path stroke-linecap="round"
+stroke-linejoin="round"
+stroke-width="2"
+d="M19 9l-7 7-7-7" />
+
+</svg>
+
+</span>
+
+</summary>
+
+<p class="text-white/60 mt-3">
+Да, оплата проходит через защищённый платёжный сервис.
+</p>
+
+</details>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+let rate = {
+  RUB:1,
+  KZT:5.2,
+  USD:90,
+  EUR:95,
+  UAH:2.3
+};
+
+let symbol = {
+  RUB:"₽",
+  KZT:"₸",
+  USD:"$",
+  EUR:"€",
+  UAH:"₴"
+};
+
+let limits = {
+  RUB:[30,50000],
+  KZT:[150,250000],
+  USD:[1,700],
+  EUR:[1,650],
+  UAH:[30,20000]
+};
+
+const flags = {
+  RUB:"🇷🇺",
+  KZT:"🇰🇿",
+  USD:"🇺🇸",
+  EUR:"🇪🇺",
+  UAH:"🇺🇦"
+};
+
+function update(){
+
+  let amount =
+    parseFloat(document.getElementById("amount").value) || 0;
+
+  let region =
+    document.getElementById("region").value;
+
+  let [min,max] = limits[region];
+
+  if(amount > 0 && amount < min){
+
+    document.getElementById("limitText").innerText =
+      `Минимум ${min} ${symbol[region]}`;
+
+  }
+  else if(amount > max){
+
+    document.getElementById("limitText").innerText =
+      `Максимум ${max} ${symbol[region]}`;
+
+  }
+  else{
+
+    document.getElementById("limitText").innerText =
+      `Мин ${min} / Макс ${max} ${symbol[region]}`;
+
+  }
+
+  // Сумма к оплате (+2%)
+  let result = amount * 1.02;
+
+  document.getElementById("resultFlag").innerText =
+    flags[region];
+
+  document.getElementById("resultValue").innerText =
+    result.toFixed(2) + " " + symbol[region];
+}
+
+function updateRegion(){
+  update();
+}
+
+function checkLogin(){
+
+  let status =
+    document.getElementById("status");
+
+  let val =
+    document.getElementById("login").value;
+
+  status.innerText = val
+    ? "К сожалению пока что мы не можем автоматически проверить логин — убедитесь в правильности."
+    : "";
+}
+
+function pay(){
+
+  let login =
+    document.getElementById("login").value;
+
+  let amount =
+    parseFloat(document.getElementById("amount").value);
+
+  let region =
+    document.getElementById("region").value;
+
+  let [min,max] = limits[region];
+
+  if(!login || !amount || amount < min || amount > max){
+
+    document.getElementById("form")
+      .classList.add("shake");
+
+    setTimeout(() => {
+      document.getElementById("form")
+        .classList.remove("shake");
+    }, 400);
+
+    alert("Проверьте логин и сумму");
+
+    return;
+  }
+
+  // К оплате +2%
+  let finalAmount = (amount * 1.02).toFixed(2);
+
+  // Ссылка оплаты
+  let paymentUrl =
+  `https://bot-t.com/payment/gets?link=https://yoomoney.ru/quickpay/confirm.xml&params%5Breceiver%5D=4100119323802485&params%5Bformcomment%5D=SteamTopUp&params%5Blabel%5D=${encodeURIComponent(login)}&params%5Bquickpay-form%5D=shop&params%5Btargets%5D=${encodeURIComponent("Steam пополнение " + login)}&params%5Bsum%5D=${finalAmount}&params%5Bneed-fio%5D=0&params%5Bneed-phone%5D=0&params%5Bneed-email%5D=0&params%5Bneed-address%5D=0&params%5BpaymentType%5D=PC&params%5BsuccessURL%5D=https%3A%2F%2Fbot-t.com%2Flink%2Fctraxdetsva_bot`;
+
+  // Переход на оплату
+  window.location.href = paymentUrl;
+}
+
+update();
+
+</script>
+
+</body>
+</html>
