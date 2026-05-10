@@ -136,7 +136,36 @@ select{
   -moz-appearance:none;
 }
 
+/* LEGAL ACCORDION */
+.legal-box{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:
+    max-height .5s ease,
+    opacity .4s ease,
+    transform .4s ease,
+    margin-top .4s ease;
+}
+
+.legal-box.open{
+  max-height:1000px;
+  opacity:1;
+  transform:translateY(0);
+  margin-top:15px;
+}
+
+.legal-content{
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  color:rgba(255,255,255,.7);
+  line-height:1.8;
+}
 </style>
+
 </head>
 
 <body>
@@ -151,20 +180,24 @@ select{
       <span class="text-white">v</span><span class="text-cyan-400">-donatik</span>
     </div>
 
-    <!-- NAV -->
     <nav class="flex items-center gap-6 text-white/70 font-medium">
 
-      <a href="#topup"
-      class="hover:text-cyan-400 transition duration-300">
-        Пополнить Steam
-      </a>
+  <a href="#topup"
+  class="hover:text-cyan-400 transition duration-300">
+    Пополнить Steam
+  </a>
 
-      <a href="#faq"
-      class="hover:text-cyan-400 transition duration-300">
-        FAQ
-      </a>
+  <a href="#faq"
+  class="hover:text-cyan-400 transition duration-300">
+    FAQ
+  </a>
 
-    </nav>
+  <a href="#contacts"
+  class="px-4 py-2 rounded-xl bg-cyan-400 text-black font-bold hover:bg-cyan-300 transition duration-300 glow">
+    Поддержка
+  </a>
+
+</nav>
 
   </div>
 
@@ -541,6 +574,151 @@ d="M19 9l-7 7-7-7" />
 
 </section>
 
+<!-- CONTACTS -->
+<footer id="contacts" class="max-w-5xl mx-auto px-6 mb-16">
+
+  <div class="glass rounded-3xl p-8 text-center">
+
+    <h3 class="text-3xl font-black mb-6 text-cyan-400">
+      Поддержка
+    </h3>
+
+    <div class="space-y-5 text-lg">
+
+      <!-- TELEGRAM -->
+      <div>
+
+        <div class="text-white/50 mb-1">
+          Telegram
+        </div>
+
+        <a href="https://t.me/vdonatilkhelp_bot"
+class="text-cyan-400 hover:text-cyan-300 transition underline">
+
+          @vdonatilkhelp_bot
+
+        </a>
+
+      </div>
+
+      <!-- EMAIL -->
+      <div>
+
+        <div class="text-white/50 mb-1">
+          почта
+        </div>
+
+        <a href="mailto:support@v-donatik.ru"
+        class="text-cyan-400 hover:text-cyan-300 transition underline">
+
+          support@v-donatik.ru
+
+        </a>
+
+      </div>
+
+      <!-- WEBSITE -->
+      <div>
+
+        <div class="text-white/50 mb-1">
+          Официальный сайт
+        </div>
+
+        <a href="https://v-donatik.ru"
+        target="_blank"
+        class="text-cyan-400 hover:text-cyan-300 transition underline">
+
+          v-donatik.ru
+
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="mt-8 text-white/30 text-sm">
+      © 2026 v-donatik — Все права защищены
+    </div>
+
+  </div>
+
+<!-- LEGAL -->
+<div class="mt-10 pt-8 border-t border-white/10">
+
+  <div class="flex flex-wrap justify-center gap-6 text-sm text-white/40">
+
+    <button onclick="openLegalPage('Политика конфиденциальности', privacyText)"
+    class="hover:text-cyan-400 transition underline">
+      Политика конфиденциальности
+    </button>
+
+    <button onclick="openLegalPage('Обработка персональных данных', dataText)"
+    class="hover:text-cyan-400 transition underline">
+      Обработка персональных данных
+    </button>
+
+    <button onclick="openLegalPage('Пользовательское соглашение', agreementText)"
+    class="hover:text-cyan-400 transition underline">
+      Пользовательское соглашение
+    </button>
+
+    <button onclick="openLegalPage('Правила возврата средств', refundText)"
+    class="hover:text-cyan-400 transition underline">
+      Правила возврата средств
+    </button>
+
+    <button onclick="openLegalPage('Публичная оферта', offerText)"
+    class="hover:text-cyan-400 transition underline">
+      Публичная оферта
+    </button>
+
+  </div>
+
+</div>
+
+<!-- FULLSCREEN LEGAL -->
+<div id="legalPage"
+class="fixed inset-0 z-[9999] bg-[#05070f] overflow-y-auto translate-y-full opacity-0 transition-all duration-500">
+
+  <!-- BG -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+  </div>
+
+  <div class="relative max-w-5xl mx-auto px-6 py-20">
+
+    <!-- TOP -->
+    <div class="flex items-center justify-between mb-10">
+
+      <h2 id="legalTitle"
+      class="text-5xl font-black text-cyan-400">
+      </h2>
+
+      <button onclick="closeLegalPage()"
+      class="text-white/50 hover:text-white text-5xl leading-none transition">
+        ×
+      </button>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="glass rounded-3xl p-8">
+
+      <div id="legalContent"
+      class="text-white/70 leading-8 text-lg space-y-6">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</footer>
+
 <script>
 
 let rate = {
@@ -671,6 +849,369 @@ function pay(){
 }
 
 update();
+
+</script>
+
+
+            
+        <a
+            href="https://umnico.com/?utm_source=widget&amp;utm_medium=online_chat&amp;utm_campaign=button"
+            target="_blank"
+            draggable="false"
+            data-umnico-logo="true"
+            style="position:fixed !important;right:38px !important;bottom:25px !important;z-index:2147483646 !important;display:flex !important;align-items:center !important;justify-content:center !important;padding-top:1px !important;padding-bottom:2px !important;background-color:rgba(227, 237, 243, 0.4) !important;border-radius:41px !important;cursor:pointer !important"
+        >
+            <img
+                draggable="false"
+                src="https://umnico.com/assets/index/umnico1.svg"
+                alt="Umnico logo"
+                style="width:45px !important;height:9px !important"
+            />
+       </a>
+    
+            <div data-umnico-loader="true" style="all: initial;position:fixed !important;right:37px !important;bottom:9px !important;z-index:2147483646 !important;font-family:sans-serif !important;font-size:10px !important;line-height:1 !important;font-weight:bold !important;padding:2px 4px 1px !important;background-color:rgba(227, 237, 243, 0.4) !important;border-radius:41px !important">Loading</div>
+            <script type="text/javascript">
+                document.umnicoWidgetHash = 'd757eb23630b3bcf5007d27ec20c0e8e';
+                var x = document.createElement('script');
+                x.src = 'https://umnico.com/assets/widget-loader.js';
+                x.type = 'text/javascript';
+                x.charset = 'UTF-8';
+                x.async = true;
+                document.body.appendChild(x);
+            </script>
+        
+<script>
+
+/* ТЕКСТЫ */
+
+const privacyText = `
+<p>
+<h3 class="text-2xl font-bold text-cyan-400">
+1. Общие положения
+</h3>
+
+<p>
+Настоящая Политика конфиденциальности регулирует порядок обработки и хранения данных пользователей сайта v-donatik.ru.
+</p>
+
+<p>
+Используя сайт, пользователь автоматически соглашается с условиями данной политики.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+2. Какие данные собираются
+</h3>
+
+<p>
+Сервис может обрабатывать следующие данные:
+</p>
+
+<p>
+— Steam логин пользователя;<br>
+— сумма пополнения;<br>
+— выбранная валюта платежа;<br>
+— IP-адрес;<br>
+— cookies;<br>
+— технические данные браузера и устройства.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+3. Цели обработки данных
+</h3>
+
+<p>
+Данные используются исключительно для:
+</p>
+
+<p>
+— выполнения пополнения Steam;<br>
+— обработки платежей;<br>
+— связи с пользователем;<br>
+— предотвращения мошеннических операций;<br>
+— улучшения качества работы сервиса.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+4. Передача данных
+</h3>
+
+<p>
+Оплата услуг осуществляется через сторонние платёжные системы. Пользователь соглашается с передачей необходимых данных платёжным операторам для выполнения транзакций.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+5. Защита данных
+</h3>
+
+<p>
+Администрация сайта принимает разумные технические и организационные меры для защиты пользовательских данных от несанкционированного доступа.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+6. Контакты
+</h3>
+
+<p>
+Telegram: @vdonatilkhelp_bot<br>
+Email: support@v-donatik.ru
+</p>
+</p>
+`;
+// #privacy
+
+const dataText = `
+<p>
+<h3 class="text-2xl font-bold text-cyan-400">
+1. Согласие пользователя
+</h3>
+
+<p>
+Пользователь, используя сайт v-donatik.ru, даёт согласие на обработку своих персональных данных.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+2. Какие данные обрабатываются
+</h3>
+
+<p>
+Обрабатываются:
+</p>
+
+<p>
+— Steam логин;<br>
+— информация о платеже;<br>
+— технические данные подключения;<br>
+— cookies.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+3. Действия с данными
+</h3>
+
+<p>
+Сервис может осуществлять:
+</p>
+
+<p>
+— сбор;<br>
+— хранение;<br>
+— использование;<br>
+— удаление;<br>
+— передачу платёжным системам.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+4. Срок хранения
+</h3>
+
+<p>
+Данные хранятся только в течение времени, необходимого для выполнения услуг и соблюдения требований законодательства.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+5. Защита информации
+</h3>
+
+<p>
+Администрация сайта принимает меры по защите персональных данных пользователей от утечки и неправомерного использования.
+</p>
+</p>
+`;
+// #data
+
+const agreementText = `
+<p>
+<h3 class="text-2xl font-bold text-cyan-400">
+1. Общие условия
+</h3>
+
+<p>
+Используя сервис v-donatik.ru, пользователь подтверждает согласие с условиями настоящего соглашения.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+2. Предмет соглашения
+</h3>
+
+<p>
+Сервис предоставляет услуги по пополнению баланса Steam аккаунтов.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+3. Обязанности пользователя
+</h3>
+
+<p>
+Пользователь обязуется:
+</p>
+
+<p>
+— указывать корректный Steam логин;<br>
+— внимательно проверять введённые данные;<br>
+— не использовать сервис в мошеннических целях.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+4. Ограничение ответственности
+</h3>
+
+<p>
+Сервис не несёт ответственности за:
+</p>
+
+<p>
+— ошибки пользователя при вводе логина;<br>
+— неверно выбранный регион аккаунта;<br>
+— задержки со стороны Steam или платёжных систем.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+5. Изменение условий
+</h3>
+
+<p>
+Администрация сайта вправе изменять условия соглашения без предварительного уведомления пользователей.
+</p>
+</p>
+`;
+// #agreement
+
+const refundText = `
+<p>
+<h3 class="text-2xl font-bold text-cyan-400">
+1. Общие положения
+</h3>
+
+<p>
+Возврат средств осуществляется в индивидуальном порядке после проверки обращения пользователя.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+2. Возврат возможен если
+</h3>
+
+<p>
+— произошла техническая ошибка сервиса;<br>
+— платёж был списан, но услуга не оказана;<br>
+— произошёл дублирующий платёж.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+3. Возврат невозможен если
+</h3>
+
+<p>
+— пользователь указал неверный Steam логин;<br>
+— средства были успешно зачислены;<br>
+— пользователь ошибся при выборе региона или валюты.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+4. Срок рассмотрения
+</h3>
+
+<p>
+Обращения рассматриваются в течение 1–7 рабочих дней.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+5. Контакты поддержки
+</h3>
+
+<p>
+Telegram: @vdonatilkhelp_bot<br>
+Email: support@v-donatik.ru
+</p>
+</p>
+`;
+// #refund
+
+const offerText = `
+<p>
+<h3 class="text-2xl font-bold text-cyan-400">
+1. Общие положения
+</h3>
+
+<p>
+Настоящий документ является публичной офертой сервиса v-donatik.ru на оказание услуг пополнения Steam.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+2. Акцепт оферты
+</h3>
+
+<p>
+Оплата услуги пользователем означает полное и безоговорочное принятие условий настоящей оферты.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+3. Предмет оферты
+</h3>
+
+<p>
+Сервис обязуется оказать услугу по пополнению Steam аккаунта пользователя после подтверждения оплаты.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+4. Стоимость услуг
+</h3>
+
+<p>
+Стоимость услуги отображается на сайте и включает комиссию сервиса.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+5. Ответственность сторон
+</h3>
+
+<p>
+Пользователь обязуется предоставлять достоверные данные. Сервис обязуется оказать услугу в разумные сроки.
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+6. Контакты
+</h3>
+
+<p>
+Сайт: v-donatik.ru<br>
+Telegram: @vdonatilkhelp_bot<br>
+Email: support@v-donatik.ru
+</p>
+</p>
+`;
+// #offer
+
+/* OPEN */
+
+function openLegalPage(title, content){
+
+  const page =
+    document.getElementById("legalPage");
+
+  document.getElementById("legalTitle").innerText =
+    title;
+
+  document.getElementById("legalContent").innerHTML =
+    content;
+
+  page.classList.remove("translate-y-full");
+  page.classList.remove("opacity-0");
+
+  document.body.style.overflow = "hidden";
+}
+
+/* CLOSE */
+
+function closeLegalPage(){
+
+  const page =
+    document.getElementById("legalPage");
+
+  page.classList.add("translate-y-full");
+  page.classList.add("opacity-0");
+
+  document.body.style.overflow = "";
+}
 
 </script>
 
